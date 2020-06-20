@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prom-storage-pvc
+  labels:
+    env: learning
+    country: india
+    app: prometheus
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi 
+   
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prom-service
+  labels:
+    env: learning
+    country: india
+    app: prometheus
+spec:
+  selector:
+    env: learning
+    country: india
+    app: prometheus
+  type: NodePort
+  ports:
+  - port: 9090
+    targetPort: 9090
+    nodePort: 31000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prom-deploy
+  labels:
+    env: learning
+    country: india
+    app: prometheus
+spec:
+  selector:
+    matchLabels:
+      env: learning
+      country: india
+      app: prometheus
+  replicas: 1
+  template:
+    metadata:
+      name: prom-pod
+      labels:
+        env: learning
+        country: india
+        app: prometheus
+    spec:
+      containers:
+      - name: myprom-con
+        image: vimal13/prometheus
+        volumeMounts:
+        - name: prometheus-storage-volume
+          mountPath: /prometheus/
+      volumes:
+      - name: prometheus-storage-volume
+        persistentVolumeClaim:
+          claimName: prom-storage-pvc
+
+

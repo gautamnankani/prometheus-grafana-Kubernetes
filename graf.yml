@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-storage-pvc
+  labels:
+    env: learning
+    country: india
+    app: grafana
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  labels:
+    env: learning
+    country: india
+    app: grafana
+spec:
+  selector:
+    env: learning
+    country: india
+    app: grafana
+  type: NodePort
+  ports:
+  - port: 3000
+    targetPort: 3000 
+    nodePort: 32000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-deploy
+  labels:
+    env: learning
+    country: india
+    app: grafana
+spec:
+  selector:
+    matchLabels:
+      env: learning
+      country: india
+      app: grafana
+  replicas: 1
+  template:
+    metadata:
+      name: grafana-pod
+      labels:
+        env: learning
+        country: india
+        app: grafana
+    spec:
+      containers:
+      - name: grafana-con
+        image: vimal13/grafana
+        volumeMounts:
+        - name: grafana-storage-volume
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-storage-volume
+        persistentVolumeClaim:
+          claimName: grafana-storage-pvc
+
+
