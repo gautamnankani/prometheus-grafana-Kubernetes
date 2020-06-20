@@ -61,11 +61,16 @@ spec:
       - name: myprom-con
         image: vimal13/prometheus
         volumeMounts:
+        - name: prometheus-config
+          mountPath: /etc/prometheus/
         - name: prometheus-storage-volume
           mountPath: /prometheus/
       volumes:
       - name: prometheus-storage-volume
         persistentVolumeClaim:
           claimName: prom-storage-pvc
+      - name: prometheus-config
+        configMap:
+          name: prom-config-file
 
 
