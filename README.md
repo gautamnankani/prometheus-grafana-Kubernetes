@@ -1,4 +1,4 @@
-# Promethheus and Grafana on Kubernetes Cluster
+# Prometheus and Grafana on Kubernetes Cluster
 
 ## Repo Structure:
 
@@ -35,4 +35,4 @@
 
 ### Then to Launch the whole setup use the below command inside the repo cloned
 
-   > kubectl apply -k . 
+     > kubectl apply -k . 
